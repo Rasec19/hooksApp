@@ -1,10 +1,12 @@
-import { useFetch } from "../hooks/useFetch"
-
+import { useCounter, useFetch } from "../hooks";
+import { LoadingQuote, Quote } from "./";
 export const MultipleCustomHooks = () => {
 
-    const { data, isLoading, hasError } = useFetch('https://api.breakingbadquotes.xyz/v1/quotes');
+    const { counter, increment, decrement } = useCounter(1);
 
-    const { author, quote } = !!data && data[0]; 
+    const { data, isLoading, hasError } = useFetch(`https://api.breakingbadquotes.xyz/v1/quotes/${counter}`);
+
+    // const { author, quote } = !!data && data[0]; 
 
     return (
     <>
@@ -12,22 +14,28 @@ export const MultipleCustomHooks = () => {
         <hr />
 
         {
-            (isLoading) 
-                ? (
-                    <div className="alert alert-info text-center">
-                        Loading...
-                    </div>
-                ) 
-                : (
-                    <blockquote className="blockquote text-end">
-                        <p className="mb-3">{ quote }</p>
-                        <footer className="blockquote-footer">{ author }</footer>
-                    </blockquote>
-                )
+            isLoading
+                ? <LoadingQuote />
+                : data.map( ({ quote, author }) => {
+                        return(
+                            <Quote quote={ quote } author={ author } key={ Math.random() } />
+                        )
+                    })
         }
 
-        <button className="btn btn-primary">
+        <button 
+            className="btn btn-primary" 
+            disabled={ isLoading }
+            onClick={ () => increment() }
+        >
             Next quote
+        </button>
+        <button 
+            className="btn btn-danger" 
+            disabled={ isLoading }
+            onClick={ () => decrement() }
+        >
+            Back quote
         </button>
         
 
