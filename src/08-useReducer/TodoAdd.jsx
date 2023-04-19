@@ -1,25 +1,38 @@
-import { useRef } from "react"
+import { useForm } from "../hooks/index";
 
-export const TodoAdd = () => {
+export const TodoAdd = ({ onNewTodo }) => {
 
-    const inputRef = useRef();
+    const { description, onInputChange, onResetForm } = useForm({
+        description: '',
+    });
 
-    const click = () => {
-        console.log(inputRef)
+    const onFormSubmit = ( event ) => {
+        event.preventDefault();
+        if( description.length <= 1 ) return;
+
+        const newTodo = {
+            id: new Date().getTime(),
+            done:false,
+            description,
+        };
+
+        onNewTodo(newTodo);
+        onResetForm();
     }
 
     return (
-    <form>
+    <form onSubmit={ onFormSubmit }>
         <input 
             type="text"
             placeholder="¿Qué hay que hacer?"
             className="form-control"
-            ref={ inputRef }
+            name="description"
+            value={ description }
+            onChange={ onInputChange }
         />
         <button 
             type="submit"
             className="btn btn-outline-primary mt-1"
-            onClick={click}
         >
             Agregar
         </button>
