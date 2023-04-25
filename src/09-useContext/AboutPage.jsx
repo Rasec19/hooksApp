@@ -1,6 +1,9 @@
 
 export const AboutPage = () => {
   return (
-    <div>AboutPage</div>
+    <>
+      <h1>AboutPage</h1>
+      <hr />
+    </>
   )
 }
